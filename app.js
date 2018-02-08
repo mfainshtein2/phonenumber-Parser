@@ -59,13 +59,11 @@ app.post('/api/phonenumbers/parse/file', function(req, res) {
 		var buffer = fs.readFileSync(req.file.path);
 		buffer.toString().split(/\n/).forEach(function(line){
 			try {
-			//console.log("LINE: " + line);
-			var num = line.replace(/\D/g, '');	//get rid of alphabetic characters
-			//console.log("Parsed is: " + num);
-			var temp = phoneUtil.parse(num,'CA');
-			if(!isEmpty(temp) && phoneUtil.isValidNumber(temp)){
-				list.push(phoneUtil.format(temp,PNF.INTERNATIONAL));
-			}
+				var num = line.replace(/\D/g, '');	//get rid of alphabetic characters
+				var temp = phoneUtil.parse(num,'CA');
+				if(!isEmpty(temp) && phoneUtil.isValidNumber(temp)){
+					list.push(phoneUtil.format(temp,PNF.INTERNATIONAL));
+				}
 			} catch(err) {
 
 			}
