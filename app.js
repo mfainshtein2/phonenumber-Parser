@@ -22,8 +22,8 @@ router.get('/api/phonenumbers/parse/text/:phoneNum',(req, res) => {
 	else{
 		var phoneNumber = phoneUtil.parse(num, 'CA');
 		list.push(phoneUtil.format(phoneNumber, PNF.INTERNATIONAL));
+		res.status(200).send(list);
 	}
-	res.status(200).send(list);
 });
 
 router.get('/',(req, res) => {
