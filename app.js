@@ -12,15 +12,15 @@ var fs = require('fs');
 // Speed up calls to hasOwnProperty
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
-/**/
 router.get('/api/phonenumbers/parse/text/:phoneNum',(req, res) => {
-	var num = req.params.phoneNum;
-	var phoneNumber = phoneUtil.parse(num, 'CA');
+	var num = req.params.phoneNum.toString().replace(/\D/g, '');
 	var list = [];
-	if(req.params.phoneNum == 'nothing' || req.params.phoneNum == ''){
+
+	if(req.params.phoneNum == 'nothing' || req.params.phoneNum == '' || num.length < 10 || num.length > 11){
 		res.status(400).send([]);
 	}
 	else{
+		var phoneNumber = phoneUtil.parse(num, 'CA');
 		list.push(phoneUtil.format(phoneNumber, PNF.INTERNATIONAL));
 	}
 	res.status(200).send(list);
