@@ -5,6 +5,7 @@ const multer = require('multer');
 
 
 var path = require('path');
+var extract = require('pdf-text-extract');
 var upload = multer({ dest: 'uploads/' });
 var PNF = require('google-libphonenumber').PhoneNumberFormat;
 var phoneUtil = require('google-libphonenumber').PhoneNumberUtil.getInstance();
@@ -28,6 +29,12 @@ router.get('/api/phonenumbers/parse/text/:phoneNum',(req, res) => {
 
 router.get('/',(req, res) => {
 	res.status(200).send('Works');
+});
+
+
+
+router.get('/api/phonenumbers/parse/pdf', (req, res) => {
+    res.sendFile(__dirname + "/routing.html");
 });
 
 router.get('/api/phonenumbers/parse/file', (req, res) => {
@@ -69,9 +76,48 @@ app.post('/api/phonenumbers/parse/file', function(req, res) {
 			}
 		});
 		res.status(200).send(list);
-	})
+	});
 });
-
+//PDF
+app.post('/api/phonenumbers/parse/pdf', function(req, res) {
+	var list = [];
+	var upload = multer({
+		storage: storage,
+		fileFilter: function(req, file, callback) {
+			var ext = path.extname(file.originalname)
+			if (ext !== '.pdf') {
+				return callback(res.end('Only pdfs are allowed'), null)
+			}
+			callback(null, true)
+		}
+	}).single('userFile');
+	upload(req, res, function(err) {
+		var extract = require('pdf-text-extract');
+		try {
+		extract(req.file.path, { splitPages: false },function (err, text) {
+			if (err) {
+				res.status(400).send("Exception caught: " + err);
+				//return bad pdf
+				return;
+			}
+			text.split(/\n/).forEach(function(line){
+				var num = line.replace(/\D/g, '');	//get rid of alphabetic characters
+				var temp = phoneUtil.parse(num,'CA');
+				if(!isEmpty(temp) && phoneUtil.isValidNumber(temp)){
+					list.push(phoneUtil.format(temp,PNF.INTERNATIONAL));
+			} 
+			});
+		});
+		}
+		catch(err) {
+				res.status(400).send("Exception caught: " + err);
+				//return bad pdf
+				return;
+		}
+		
+			res.status(200).send(list);
+	});
+});
 app.use(router);
 
 app.listen(9000, () => {

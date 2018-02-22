@@ -35,10 +35,18 @@ $ nodemon app
 localhost:9000/api/phonenumbers/parse/text/{TEXT_TO_PARSE}
 ```
 
-## Post
+## Post with text file
 For POST request you will need to enter the following url.
 ```
 localhost:9000/api/phonenumbers/parse/file
 ```
 This here will bring you to a html file that will allow you to upload a text file.
+
+## Post with PDF file
+For POST request you will need to enter the following url.
+```
+localhost:9000/api/phonenumbers/parse/pdf
+```
+This here will bring you to a html pdf that will allow you to upload a text file.
+
 
