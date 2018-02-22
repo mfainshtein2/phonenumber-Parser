@@ -47,6 +47,6 @@ For POST request you will need to enter the following url.
 ```
 localhost:9000/api/phonenumbers/parse/pdf
 ```
-This here will bring you to a html pdf that will allow you to upload a text file.
+This here will bring you to a html pdf that will allow you to upload a pdf file.
 
 
